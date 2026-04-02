@@ -3,42 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Sinaq Sistemi</title>
+    <title>AI Test Master</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
     <script src="https://unpkg.com/tesseract.js@v2.1.0/dist/tesseract.min.js"></script>
 </head>
-<body data-theme="light">
+<body>
     <div class="container">
         <header>
-            <h1>🇦🇿 AI Test Generator</h1>
-            <button id="theme-btn">🌙 Rejim</button>
+            <h1>🚀 AI Test Generator</h1>
+            <button id="theme-toggle">🌙/☀️</button>
         </header>
-
-        <div class="main-card">
+        <div class="card">
             <input type="file" id="fileInput" accept=".pdf, image/*">
-            <p>PDF və ya Şəkil yükləyin (Min. 10 sual)</p>
-            <button class="btn-primary" onclick="startProcessing()">Testləri Yarat</button>
+            <button onclick="processFile()">Testləri Yarat</button>
         </div>
-
-        <div id="status-bar" class="hidden">
-            <span>⏱ <b id="timer">00:00</b></span>
-            <span>📝 <b id="q-total">0</b> Sual</span>
+        <div id="stats-bar" style="display:none; justify-content: space-around; background: #1a73e8; color: white; padding: 10px; border-radius: 8px; margin: 10px 0;">
+            <span>⏱ Vaxt: <b id="timer">00:00</b></span>
+            <span>📝 Suallar: <b id="q-count">0</b></span>
         </div>
-
-        <div id="loader" class="hidden">🔄 Fayl analiz olunur...</div>
-        <div id="quiz-box"></div>
-
-        <button id="finish-btn" class="hidden" onclick="showResults()">İmtahanı Bitir</button>
-        
-        <div id="res-modal" class="modal hidden">
-            <div class="modal-content">
-                <h2>Nəticəniz</h2>
-                <p id="res-text"></p>
-                <button onclick="location.reload()">Yeni Test</button>
-            </div>
-        </div>
+        <div id="loading" class="hidden">✨ AI Mətni analiz edir və suallar hazırlayır...</div>
+        <div id="quiz-container"></div>
+        <button id="submit-btn" class="hidden" onclick="checkResults()" style="margin-top: 20px; width: 100%;">İmtahanı Bitir</button>
     </div>
+    <script>const pdfjsLib = window['pdfjs-dist/build/pdf']; pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';</script>
     <script src="script.js"></script>
 </body>
 </html>
