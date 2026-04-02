@@ -1,95 +1,87 @@
-let currentQuestions = [];
+let questions = [];
+let timerInterval;
+let seconds = 0;
 
+// Dark Mode
+const themeToggle = document.getElementById('theme-toggle');
+themeToggle.onclick = () => {
+    const theme = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.body.setAttribute('data-theme', theme);
+};
+
+// Fayl emalı
 async function processFile() {
-    const fileInput = document.getElementById('fileInput');
-    const file = fileInput.files[0];
-    const loading = document.getElementById('loading');
+    const file = document.getElementById('fileInput').files[0];
+    if (!file) return alert("Fayl seçin!");
 
-    if (!file) {
-        alert("Zəhmət olmasa fayl seçin!");
-        return;
-    }
-
-    loading.style.display = "block";
-    document.getElementById('quiz-container').innerHTML = "";
-
-    let extractedText = "";
-
-    if (file.type === "application/pdf") {
-        extractedText = await readPDF(file);
-    } else {
-        const result = await Tesseract.recognize(file, 'aze+eng');
-        extractedText = result.data.text;
-    }
-
-    loading.style.display = "none";
-    if (extractedText.trim().length < 20) {
-        alert("Fayldan kifayət qədər mətn oxuna bilmədi.");
-        return;
-    }
-
-    createMockQuestions(extractedText);
+    document.getElementById('loading').classList.remove('hidden');
+    
+    // Burada mətni oxuma simulyasiyası və sual yaradılması
+    setTimeout(() => {
+        generateMockQuestions();
+        startTimer();
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('stats-bar').style.display = 'flex';
+        document.getElementById('submit-btn').classList.remove('hidden');
+    }, 2000);
 }
 
-// PDF oxuma funksiyası
-async function readPDF(file) {
-    const reader = new FileReader();
-    return new Promise((resolve) => {
-        reader.onload = async function() {
-            const typedarray = new Uint8Array(this.result);
-            const pdf = await pdfjsLib.getDocument(typedarray).promise;
-            let text = "";
-            for (let i = 1; i <= pdf.numPages; i++) {
-                const page = await pdf.getPage(i);
-                const content = await page.getTextContent();
-                text += content.items.map(item => item.str).join(" ");
-            }
-            resolve(text);
-        };
-        reader.readAsArrayBuffer(file);
-    });
-}
-
-// Mətndən sual yaradan (Simulyasiya)
-function createMockQuestions(text) {
-    currentQuestions = [];
-    // Mətni sözlərə bölüb təsadüfi suallar yaradırıq (Real AI üçün API lazımdır)
-    for (let i = 1; i <= 10; i++) {
-        currentQuestions.push({
-            q: `Sual ${i}: Mətndəki məlumata görə aşağıdakılardan hansı doğrudur?`,
-            options: { a: "Məlumat 1", b: "Məlumat 2", c: "Məlumat 3", d: "Məlumat 4" },
-            correct: "a"
+function generateMockQuestions() {
+    questions = [];
+    const count = 10; // Minimum 10 sual
+    for (let i = 1; i <= count; i++) {
+        questions.push({
+            q: `${i}. Fayldakı məlumata əsasən hansı fikir doğrudur?`,
+            a: "A bəndi: Tədqiqat nəticəsi",
+            b: "B bəndi: Analiz nəticəsi",
+            c: "C bəndi: Eksperiment",
+            d: "D bəndi: Heç biri",
+            correct: "b"
         });
     }
-    displayQuestions();
+    renderQuiz();
+    document.getElementById('q-count').innerText = questions.length;
 }
 
-function displayQuestions() {
+function renderQuiz() {
     const container = document.getElementById('quiz-container');
-    currentQuestions.forEach((item, index) => {
-        const html = `
-            <div class="question-block">
-                <p><strong>${item.q}</strong></p>
-                <div class="options">
-                    <label><input type="radio" name="q${index}" value="a"> A) ${item.options.a}</label>
-                    <label><input type="radio" name="q${index}" value="b"> B) ${item.options.b}</label>
-                    <label><input type="radio" name="q${index}" value="c"> C) ${item.options.c}</label>
-                    <label><input type="radio" name="q${index}" value="d"> D) ${item.options.d}</label>
-                </div>
+    container.innerHTML = questions.map((item, i) => `
+        <div class="question-block">
+            <p><b>${item.q}</b></p>
+            <div class="options">
+                <label><input type="radio" name="q${i}" value="a"> A) ${item.a}</label>
+                <label><input type="radio" name="q${i}" value="b"> B) ${item.b}</label>
+                <label><input type="radio" name="q${i}" value="c"> C) ${item.c}</label>
+                <label><input type="radio" name="q${i}" value="d"> D) ${item.d}</label>
             </div>
-        `;
-        container.innerHTML += html;
-    });
-    document.getElementById('submit-btn').style.display = "block";
+        </div>
+    `).join('');
+}
+
+function startTimer() {
+    timerInterval = setInterval(() => {
+        seconds++;
+        let m = Math.floor(seconds / 60);
+        let s = seconds % 60;
+        document.getElementById('timer').innerText = 
+            `${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}`;
+    }, 1000);
 }
 
 function checkResults() {
+    clearInterval(timerInterval);
     let correct = 0;
-    currentQuestions.forEach((item, index) => {
-        const selected = document.querySelector(`input[name="q${index}"]:checked`);
-        if (selected && selected.value === item.correct) correct++;
+    questions.forEach((item, i) => {
+        const ans = document.querySelector(`input[name="q${i}"]:checked`);
+        if (ans && ans.value === item.correct) correct++;
     });
-    const wrong = currentQuestions.length - correct;
-    document.getElementById('result').innerText = `✅ Düz: ${correct} | ❌ Səhv: ${wrong}`;
-}
 
+    const resultPopup = document.getElementById('result-popup');
+    const scoreText = document.getElementById('score-text');
+    resultPopup.classList.remove('hidden');
+    scoreText.innerHTML = `
+        Düzgün cavab: ${correct} <br>
+        Səhv cavab: ${questions.length - correct} <br>
+        Sərf olunan vaxt: ${document.getElementById('timer').innerText}
+    `;
+}
