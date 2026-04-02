@@ -1,1 +1,37 @@
-# Sinaq
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Test Generator - StreetPro Edition</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <script src="https://unpkg.com/tesseract.js@v2.1.0/dist/tesseract.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📝 Sual Hazırlama Sistemi</h1>
+            <p>PDF və ya Şəkil yükləyin, AI sizin üçün test hazırlasın.</p>
+        </header>
+
+        <div class="upload-section">
+            <input type="file" id="fileInput" accept=".pdf, image/*">
+            <button id="generateBtn" onclick="processFile()">Sualları Hazırla</button>
+        </div>
+
+        <div id="loading" style="display:none;">Fayl analiz edilir, xahiş edirik gözləyin...</div>
+
+        <div id="quiz-container"></div>
+
+        <div class="actions">
+            <button id="submit-btn" style="display:none;" onclick="checkResults()">Nəticəni Gör</button>
+        </div>
+
+        <div id="result"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
