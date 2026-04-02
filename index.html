@@ -3,41 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Test Master | StreetPro</title>
+    <title>AI Sinaq Sistemi</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
     <script src="https://unpkg.com/tesseract.js@v2.1.0/dist/tesseract.min.js"></script>
 </head>
-<body>
+<body data-theme="light">
     <div class="container">
         <header>
-            <h1>🚀 AI Test Generator</h1>
-            <button id="theme-toggle">🌙/☀️</button>
+            <h1>🇦🇿 AI Test Generator</h1>
+            <button id="theme-btn">🌙 Rejim</button>
         </header>
 
-        <div class="card upload-area">
+        <div class="main-card">
             <input type="file" id="fileInput" accept=".pdf, image/*">
-            <p>PDF və ya Şəkil seçin (Limit: 100 sual)</p>
-            <button id="generateBtn" onclick="processFile()">Testləri Hazırla</button>
+            <p>PDF və ya Şəkil yükləyin (Min. 10 sual)</p>
+            <button class="btn-primary" onclick="startProcessing()">Testləri Yarat</button>
         </div>
 
-        <div id="stats-bar" style="display:none;">
-            <span>⏱ Zaman: <b id="timer">00:00</b></span>
-            <span>📊 Suallar: <b id="q-count">0</b></span>
+        <div id="status-bar" class="hidden">
+            <span>⏱ <b id="timer">00:00</b></span>
+            <span>📝 <b id="q-total">0</b> Sual</span>
         </div>
 
-        <div id="loading" class="hidden">✨ Fayl analiz edilir...</div>
-        <div id="quiz-container"></div>
+        <div id="loader" class="hidden">🔄 Fayl analiz olunur...</div>
+        <div id="quiz-box"></div>
 
-        <div class="footer-actions">
-            <button id="submit-btn" class="hidden" onclick="checkResults()">İmtahanı Bitir</button>
-        </div>
-
-        <div id="result-popup" class="hidden">
-            <div class="result-content">
-                <h2>İmtahan Nəticəsi</h2>
-                <p id="score-text"></p>
-                <button onclick="location.reload()">Yenidən Başla</button>
+        <button id="finish-btn" class="hidden" onclick="showResults()">İmtahanı Bitir</button>
+        
+        <div id="res-modal" class="modal hidden">
+            <div class="modal-content">
+                <h2>Nəticəniz</h2>
+                <p id="res-text"></p>
+                <button onclick="location.reload()">Yeni Test</button>
             </div>
         </div>
     </div>
