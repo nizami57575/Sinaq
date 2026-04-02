@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Test Generator - StreetPro Edition</title>
+    <title>AI Test Master | StreetPro</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
     <script src="https://unpkg.com/tesseract.js@v2.1.0/dist/tesseract.min.js"></script>
@@ -11,27 +11,36 @@
 <body>
     <div class="container">
         <header>
-            <h1>📝 Sual Hazırlama Sistemi</h1>
-            <p>PDF və ya Şəkil yükləyin, AI sizin üçün test hazırlasın.</p>
+            <h1>🚀 AI Test Generator</h1>
+            <button id="theme-toggle">🌙/☀️</button>
         </header>
 
-        <div class="upload-section">
+        <div class="card upload-area">
             <input type="file" id="fileInput" accept=".pdf, image/*">
-            <button id="generateBtn" onclick="processFile()">Sualları Hazırla</button>
+            <p>PDF və ya Şəkil seçin (Limit: 100 sual)</p>
+            <button id="generateBtn" onclick="processFile()">Testləri Hazırla</button>
         </div>
 
-        <div id="loading" style="display:none;">Fayl analiz edilir, xahiş edirik gözləyin...</div>
+        <div id="stats-bar" style="display:none;">
+            <span>⏱ Zaman: <b id="timer">00:00</b></span>
+            <span>📊 Suallar: <b id="q-count">0</b></span>
+        </div>
 
+        <div id="loading" class="hidden">✨ Fayl analiz edilir...</div>
         <div id="quiz-container"></div>
 
-        <div class="actions">
-            <button id="submit-btn" style="display:none;" onclick="checkResults()">Nəticəni Gör</button>
+        <div class="footer-actions">
+            <button id="submit-btn" class="hidden" onclick="checkResults()">İmtahanı Bitir</button>
         </div>
 
-        <div id="result"></div>
+        <div id="result-popup" class="hidden">
+            <div class="result-content">
+                <h2>İmtahan Nəticəsi</h2>
+                <p id="score-text"></p>
+                <button onclick="location.reload()">Yenidən Başla</button>
+            </div>
+        </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
-
